@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.0</version>
+    </parent>
+
+    <groupId>com.vasnatech</groupId>
+    <artifactId>mando</artifactId>
+    <version>0.1</version>
+
+    <properties>
+        <jdk.version>21</jdk.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-shell.version>3.3.0</spring-shell.version>
+        <vasnatech.java-commons.version>0.2</vasnatech.java-commons.version>
+        <com.fasterxml.jackson.version>2.17.2</com.fasterxml.jackson.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.vasnatech</groupId>
+            <artifactId>commons-function</artifactId>
+            <version>${vasnatech.java-commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vasnatech</groupId>
+            <artifactId>commons-type</artifactId>
+            <version>${vasnatech.java-commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vasnatech</groupId>
+            <artifactId>commons-collection</artifactId>
+            <version>${vasnatech.java-commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vasnatech</groupId>
+            <artifactId>commons-resource</artifactId>
+            <version>${vasnatech.java-commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vasnatech</groupId>
+            <artifactId>commons-schema</artifactId>
+            <version>${vasnatech.java-commons.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-properties</artifactId>
+            <version>${com.fasterxml.jackson.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.shell</groupId>
+                <artifactId>spring-shell-dependencies</artifactId>
+                <version>${spring-shell.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

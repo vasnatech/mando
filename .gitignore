@@ -1,3 +1,6 @@
+target/
+mando.iml
+
 # Compiled class file
 *.class
 
