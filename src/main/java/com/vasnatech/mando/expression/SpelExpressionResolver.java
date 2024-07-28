@@ -1,11 +1,15 @@
 package com.vasnatech.mando.expression;
 
+import com.vasnatech.commons.type.Scope;
 import com.vasnatech.commons.type.VariableContainer;
 import com.vasnatech.mando.expression.function.Functions;
-import com.vasnatech.mando.model.Session;
 import org.springframework.asm.MethodVisitor;
 import org.springframework.context.expression.MapAccessor;
-import org.springframework.expression.*;
+import org.springframework.expression.AccessException;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.TypedValue;
 import org.springframework.expression.spel.CodeFlow;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
@@ -14,14 +18,12 @@ import org.springframework.util.Assert;
 
 public class SpelExpressionResolver implements ExpressionResolver {
 
-    final Session session;
     final ExpressionParser expressionParser;
     final StandardEvaluationContext evaluationContext;
 
-    public SpelExpressionResolver(Session session) {
-        this.session = session;
+    public SpelExpressionResolver(Scope scope) {
         this.expressionParser = new SpelExpressionParser();
-        this.evaluationContext = new StandardEvaluationContext(session);
+        this.evaluationContext = new StandardEvaluationContext(scope);
         this.evaluationContext.addPropertyAccessor(new VariableContainerAccessor());
         this.evaluationContext.addPropertyAccessor(new MapAccessor());
         Functions.methods().forEach(evaluationContext::registerFunction);

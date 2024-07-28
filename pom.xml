@@ -65,6 +65,16 @@
             <artifactId>commons-schema</artifactId>
             <version>${vasnatech.java-commons.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.vasnatech</groupId>
+            <artifactId>commons-random</artifactId>
+            <version>${vasnatech.java-commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vasnatech</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>${vasnatech.java-commons.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>

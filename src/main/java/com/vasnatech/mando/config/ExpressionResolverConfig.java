@@ -11,6 +11,6 @@ public class ExpressionResolverConfig {
 
     @Bean
     public ExpressionResolver expressionResolver(Session session) {
-        return new SpelExpressionResolver(session);
+        return new SpelExpressionResolver(session.scope());
     }
 }

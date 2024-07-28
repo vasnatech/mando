@@ -1,4 +1,4 @@
-package com.vasnatech.mando.schema;
+package com.vasnatech.mando.schema.environment;
 
 import com.fasterxml.jackson.core.JsonFactory;
 

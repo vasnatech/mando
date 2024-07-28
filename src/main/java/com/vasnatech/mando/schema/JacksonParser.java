@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.vasnatech.commons.schema.SupportedMediaTypes;
+import com.vasnatech.commons.schema.parse.SchemaParser;
+import com.vasnatech.commons.schema.schema.Schema;
 import com.vasnatech.commons.serialize.MediaType;
 
 import java.io.IOException;
@@ -14,11 +16,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class JacksonEnvironmentParser implements EnvironmentParser {
+public abstract class JacksonParser<S extends Schema> implements SchemaParser<S> {
 
-    final JsonFactory jsonFactory;
+    protected final JsonFactory jsonFactory;
 
-    public JacksonEnvironmentParser(JsonFactory jsonFactory) {
+    protected JacksonParser(JsonFactory jsonFactory) {
         this.jsonFactory = jsonFactory;
     }
 
@@ -28,59 +30,13 @@ public class JacksonEnvironmentParser implements EnvironmentParser {
     }
 
     @Override
-    public Environment parse(InputStream in) throws IOException {
+    public S parse(InputStream in) throws IOException {
         return parse(jsonFactory.createParser(in));
     }
 
-    private Environment parse(JsonParser parser) throws IOException {
-        parser.nextToken();
-        if (parser.currentToken() == JsonToken.START_OBJECT) {
-            Environment.Builder schemasBuilder = Environment.builder();
-            parser.nextToken();
-            while (parser.currentToken() == JsonToken.FIELD_NAME) {
-                String fieldName = parser.currentName();
-                if ("meta".equals(fieldName)) {
-                    parseMeta(parser, schemasBuilder);
-                } else if ("variables".equals(fieldName)) {
-                    parseMeta(parser, schemasBuilder);
-                } else if ("headers".equals(fieldName)) {
-                    parseMeta(parser, schemasBuilder);
-                }
-                parser.nextToken();
-            }
-            return schemasBuilder.build();
-        }
-        return null;
-    }
+    protected abstract S parse(JsonParser parser) throws IOException;
 
-    private void parseMeta(JsonParser parser, Environment.Builder schemasBuilder) throws IOException {
-        parser.nextToken();
-        if (parser.currentToken() == JsonToken.START_OBJECT) {
-            parser.nextToken();
-            while (parser.currentToken() == JsonToken.FIELD_NAME) {
-                schemasBuilder.meta(parser.currentName(), parser.nextTextValue());
-                parser.nextToken();
-            }
-        }
-    }
-
-    @Override
-    public Environment continueParsing(JsonParser parser, Map<String, String> meta) throws IOException {
-        Environment.Builder environmentBuilder = Environment.builder();
-        environmentBuilder.meta(meta);
-        while (parser.currentToken() == JsonToken.FIELD_NAME) {
-            String fieldName = parser.currentName();
-            if ("variables".equals(fieldName)) {
-                parseObjectAsMap(parser, environmentBuilder::variable);
-            } else if ("headers".equals(fieldName)) {
-                parseObjectAsMap(parser, environmentBuilder::header);
-            }
-            parser.nextToken();
-        }
-        return environmentBuilder.build();
-    }
-
-    void parseObjectAsMap(JsonParser parser, BiConsumer<String, Object> appender) throws IOException {
+    protected void parseObjectAsMap(JsonParser parser, BiConsumer<String, Object> appender) throws IOException {
         parser.nextToken();
         if (parser.currentToken() == JsonToken.START_OBJECT) {
             parser.nextToken();
@@ -94,7 +50,20 @@ public class JacksonEnvironmentParser implements EnvironmentParser {
         }
     }
 
-    Object parseValue(JsonParser parser) throws IOException {
+    protected void parseObjectAsStringMap(JsonParser parser, BiConsumer<String, String> appender) throws IOException {
+        parser.nextToken();
+        if (parser.currentToken() == JsonToken.START_OBJECT) {
+            parser.nextToken();
+            while (parser.currentToken() == JsonToken.FIELD_NAME) {
+                String fieldName = parser.currentName();
+                String value = parser.nextTextValue();
+                appender.accept(fieldName, value);
+                parser.nextToken();
+            }
+        }
+    }
+
+    protected Object parseValue(JsonParser parser) throws IOException {
         JsonToken currentToken = parser.currentToken();
         return switch (currentToken) {
             case NOT_AVAILABLE -> null;
@@ -113,7 +82,7 @@ public class JacksonEnvironmentParser implements EnvironmentParser {
         };
     }
 
-    Map<String, ?> parseObject(JsonParser parser) throws IOException {
+    protected Map<String, ?> parseObject(JsonParser parser) throws IOException {
         Map<String, Object> map = new LinkedHashMap<>();
         parser.nextToken();
         while (parser.currentToken() == JsonToken.FIELD_NAME) {
@@ -125,7 +94,7 @@ public class JacksonEnvironmentParser implements EnvironmentParser {
         return map;
     }
 
-    List<?> parseArray(JsonParser parser) throws IOException {
+    protected List<?> parseArray(JsonParser parser) throws IOException {
         List<Object> list = new ArrayList<>();
         parser.nextToken();
         while (parser.currentToken() != JsonToken.END_ARRAY) {
@@ -136,7 +105,7 @@ public class JacksonEnvironmentParser implements EnvironmentParser {
     }
 
     @Override
-    public Environment normalize(Environment schema) {
+    public S normalize(S schema) {
         return schema;
     }
 }

@@ -1,7 +1,7 @@
 package com.vasnatech.mando.config;
 
 import com.vasnatech.commons.schema.load.SchemaLoader;
-import com.vasnatech.mando.schema.Environment;
+import com.vasnatech.mando.schema.environment.Environment;
 import com.vasnatech.mando.model.GlobalVariables;
 import com.vasnatech.mando.model.Session;
 import org.springframework.context.annotation.Bean;
@@ -18,10 +18,10 @@ public class SessionConfig {
     public SessionConfig() {}
 
     @Bean
-    public Session session(GlobalVariables globalVariables, SchemaLoader schemaLoader) throws IOException {
-        Session session = new Session(globalVariables);
-        session.put("username", globalVariables.username());
-        session.put("email", globalVariables.email());
+    public Session session(GlobalVariables globalVariables, Path workspaceDirectory, SchemaLoader schemaLoader) throws IOException {
+        Session session = new Session(globalVariables, workspaceDirectory);
+        session.scope().put("username", globalVariables.username());
+        session.scope().put("email", globalVariables.email());
 
         return loadWorkspaceEnvironments(session, schemaLoader);
     }
@@ -34,7 +34,7 @@ public class SessionConfig {
                 .toList();
         for (Path environmentFile : environmentFiles) {
             Environment environment = schemaLoader.load(Files.newBufferedReader(environmentFile));
-            session.environments().put(environmentFile.getFileName().toString(), environment);
+            environment.variables().forEach(session.scope()::put);
         }
         return session;
     }

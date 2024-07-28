@@ -69,15 +69,4 @@ public class ApplicationConfig {
         }
         return workspaceDirectory;
     }
-
-    @Bean
-    public Path projectsDirectory(Path workspaceDirectory) throws IOException {
-        Path projectsDirectory = workspaceDirectory.resolve("projects");
-        if (!Files.exists(projectsDirectory)) {
-            log.info("Creating projects directory. Path: {}", projectsDirectory);
-            Files.createDirectories(projectsDirectory);
-            log.info("Created projects directory. Path: {}", projectsDirectory);
-        }
-        return projectsDirectory;
-    }
 }

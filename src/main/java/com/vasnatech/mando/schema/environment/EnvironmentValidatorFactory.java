@@ -1,10 +1,6 @@
-package com.vasnatech.mando.schema;
+package com.vasnatech.mando.schema.environment;
 
-import com.vasnatech.commons.schema.validate.SchemaValidator;
 import com.vasnatech.commons.schema.validate.SchemaValidatorFactory;
-import com.vasnatech.commons.schema.validate.ValidationInfo;
-
-import java.util.List;
 
 public class EnvironmentValidatorFactory implements SchemaValidatorFactory<Environment, EnvironmentValidator> {
 
