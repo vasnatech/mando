@@ -1,9 +1,9 @@
 package com.vasnatech.mando.command;
 
 import com.vasnatech.commons.schema.load.SchemaLoader;
-import com.vasnatech.mando.expression.ExpressionResolver;
 import com.vasnatech.mando.model.Session;
 import com.vasnatech.mando.schema.environment.Environment;
+import com.vasnatech.mando.service.ExpressionService;
 import com.vasnatech.mando.service.FileSystemService;
 import com.vasnatech.mando.service.FormatService;
 import org.jline.utils.AttributedString;
@@ -21,19 +21,19 @@ public class VarCommands extends AbstractCommands {
 
     final FileSystemService fileSystemService;
     final SchemaLoader schemaLoader;
-    final ExpressionResolver expressionResolver;
+    final ExpressionService expressionService;
 
     public VarCommands(
             Session session,
             FormatService formatService,
             FileSystemService fileSystemService,
             SchemaLoader schemaLoader,
-            ExpressionResolver expressionResolver
+            ExpressionService expressionService
     ) {
         super(session, formatService);
         this.fileSystemService = fileSystemService;
         this.schemaLoader = schemaLoader;
-        this.expressionResolver = expressionResolver;
+        this.expressionService = expressionService;
     }
 
     @ShellMethod(group = "Var", key = "var ls", prefix = "-")
@@ -65,7 +65,7 @@ public class VarCommands extends AbstractCommands {
                         .map(val -> formatService.formatVariable(type, name, val))
                         .orElse("No variable named " + name);
             } else {
-                Object value = expressionResolver.resolve(expression.replace('`', '\''));
+                Object value = expressionService.resolve(expression);
                 session.scope().put(name, value);
                 return formatService.formatVariable(type, name, value);
             }
@@ -84,6 +84,6 @@ public class VarCommands extends AbstractCommands {
 
     @ShellMethod(group = "Var", key = "eval", prefix = "-")
     public AttributedString evaluate(String expression) throws Exception {
-        return execute(() -> expressionResolver.resolve(expression.replace('`', '\'')));
+        return execute(() -> expressionService.resolve(expression));
     }
 }
