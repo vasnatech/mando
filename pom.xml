@@ -75,6 +75,11 @@
             <artifactId>commons-text</artifactId>
             <version>${vasnatech.java-commons.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.vasnatech</groupId>
+            <artifactId>commons-http-jdk</artifactId>
+            <version>${vasnatech.java-commons.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>

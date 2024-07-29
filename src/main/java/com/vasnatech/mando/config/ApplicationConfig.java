@@ -3,8 +3,6 @@ package com.vasnatech.mando.config;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
 import com.vasnatech.mando.model.GlobalVariables;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,8 +15,6 @@ import java.nio.file.Path;
 @Slf4j
 @Configuration
 public class ApplicationConfig {
-
-    private static final Logger log = LoggerFactory.getLogger(ApplicationConfig.class);
 
     @Bean
     public Path userHomeDirectory() {

@@ -81,7 +81,6 @@ public class JacksonHttpEndpointParser extends JacksonParser<HttpEndpoint> imple
             while (parser.currentToken() == JsonToken.FIELD_NAME) {
                 String status = parser.currentName();
                 HttpEndpointResponse.Builder responseBuilder = HttpEndpointResponse.builder();
-                responseBuilder.status(status);
                 parseResponse(parser, responseBuilder);
                 endpointBuilder.response(status, responseBuilder.build());
 
@@ -96,7 +95,9 @@ public class JacksonHttpEndpointParser extends JacksonParser<HttpEndpoint> imple
             parser.nextToken();
             while (parser.currentToken() == JsonToken.FIELD_NAME) {
                 String fieldName = parser.currentName();
-                if ("headers".equals(fieldName)) {
+                if ("status".equals(fieldName)) {
+                    responseBuilder.status(parser.nextTextValue());
+                } else if ("headers".equals(fieldName)) {
                     parseObjectAsStringMap(parser, responseBuilder::header);
                 } else if ("body".equals(fieldName)) {
                     responseBuilder.body(parseBody(parser));
