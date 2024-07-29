@@ -43,12 +43,12 @@ public class FileSystemService {
         return child;
     }
 
-    public TreeNode treeOfCurrentDirectory(boolean all) throws IOException {
+    public TreeNode treeOfCurrentDirectory(boolean recursive) throws IOException {
         Path currentDirectory = session.currentDirectory();
-        return treeOfDirectory(all, TreeNode.branch("ROOT", ""), currentDirectory, "");
+        return treeOfDirectory(recursive, TreeNode.branch("ROOT", ""), currentDirectory, "");
     }
 
-    TreeNode treeOfDirectory(boolean all, TreeNode parent, Path parentPath, String prefix) throws IOException {
+    TreeNode treeOfDirectory(boolean recursive, TreeNode parent, Path parentPath, String prefix) throws IOException {
         Files.list(parentPath)
                 .map(childPath -> {
                     String name = childPath.getFileName().toString();
@@ -56,8 +56,8 @@ public class FileSystemService {
                     if (Files.isDirectory(childPath)) {
                         try {
                             TreeNode treeNode = TreeNode.branch(name, fullName + "/");
-                            return all
-                                    ? treeOfDirectory(all, treeNode, childPath, prefix + name + "/")
+                            return recursive
+                                    ? treeOfDirectory(recursive, treeNode, childPath, prefix + name + "/")
                                     : treeNode;
                         } catch (IOException e) {
                             throw new RuntimeException(e.getMessage(), e);

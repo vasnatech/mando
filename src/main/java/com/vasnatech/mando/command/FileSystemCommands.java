@@ -32,11 +32,11 @@ public class FileSystemCommands extends AbstractCommands {
     public AttributedString ls(
             @ShellOption(value = "l") boolean list,
             @ShellOption(value = "t") boolean tree,
-            @ShellOption(value = "a") boolean all,
+            @ShellOption(value = "r") boolean recursive,
             @ShellOption(value = "f", defaultValue = "%") String filter
     ) throws Exception {
         return execute(() -> {
-            TreeNode root = fileSystemService.treeOfCurrentDirectory(all);
+            TreeNode root = fileSystemService.treeOfCurrentDirectory(recursive);
             return tree ? treeService.treeOfTree(root, filter) : treeService.listOfTree(root, list, filter);
         });
     }
