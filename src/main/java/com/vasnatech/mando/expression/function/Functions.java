@@ -12,7 +12,7 @@ public final class Functions {
     }
 
     private static final Map<String, Method> METHODS = new HashMap<>(30);
-    private static final Map<String, Map<String, Method>> METHODS_GROUPED_BY = new HashMap<>(5);
+    private static final Map<String, Map<String, Method>> METHODS_GROUPED_BY = new HashMap<>(6);
 
     static {
         addMethods("String", StringFunctions.class);
@@ -20,6 +20,7 @@ public final class Functions {
         addMethods("DateTime", DateTimeFunctions.class);
         addMethods("Collection", CollectionFunctions.class);
         addMethods("Random", RandomFunctions.class);
+        addMethods("Number", NumberFunctions.class);
     }
 
     public static void addMethod(String group, String name, Method method) {
@@ -30,6 +31,7 @@ public final class Functions {
     public static void addMethods(String group, Class<?> type) {
         Stream.of(type.getDeclaredMethods())
                 .filter(method -> Modifier.isStatic(method.getModifiers()))
+                .filter(method -> Modifier.isPublic(method.getModifiers()))
                 .forEach(method -> addMethod(group, method.getName(), method));
     }
 
