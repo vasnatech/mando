@@ -17,7 +17,7 @@ public class AbstractCommands {
         this.formatService = formatService;
     }
 
-    <T> AttributedString execute(CheckedSupplier<T> supplier) throws Exception {
+    <T> AttributedString execute(CheckedSupplier<T, Exception> supplier) throws Exception {
         try {
             return formatService.success(supplier.get());
         } catch (Exception e) {

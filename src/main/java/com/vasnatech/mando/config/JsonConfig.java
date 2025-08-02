@@ -1,7 +1,7 @@
 package com.vasnatech.mando.config;
 
 import com.vasnatech.commons.json.Json;
-import com.vasnatech.commons.json.jackson.Jackson;
+import com.vasnatech.commons.json.jackson.JsonJackson;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,7 +10,7 @@ public class JsonConfig {
 
     @Bean
     public Json json() {
-        Jackson.init();
+        JsonJackson.init();
         return Json.getJson();
     }
 }
